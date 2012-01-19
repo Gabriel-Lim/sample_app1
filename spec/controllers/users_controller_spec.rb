@@ -3,6 +3,7 @@ require 'spec_helper'
 describe UsersController do
 	render_views
 	
+	
 	describe "GET 'index'" do
 		
 		describe "for non-signed in users" do
@@ -25,7 +26,7 @@ describe UsersController do
 			
 			it "should be successful" do
 				get :index
-				repsonse.should be_success
+				response.should be_success
 			end
 			
 			it "should have the right title" do
@@ -48,15 +49,18 @@ describe UsersController do
 	
 	
 	
-	
-	
-	
-	
-	
 	describe "GET 'show'" do
 		
 		before (:each) do
 			@user = Factory(:user)
+		end
+		
+		it "should show the user's microposts" do
+			mp1 = Factory(:micropost, :user => @user, :content => "Foo Bar")
+			mp2 = Factory(:micropost, :user => @user, :content => "Baz quux")
+			get :show, :id => @user
+			response.should have_selector("span.content", :content => mp1.content)
+			response.should have_selector("span.content", :content => mp2.content)
 		end
 		
 		it "should be successful" do
